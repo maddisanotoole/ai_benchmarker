@@ -1,0 +1,23 @@
+{
+  "name": "ai-benchmarker-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --loader ts-node/esm index.ts",
+    "build": "tsc -p .",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^9.0.0",
+    "dotenv": "^16.3.1",
+    "fastify": "^4.28.0",
+    "ollama": "^0.6.3",
+    "undici": "^6.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.42",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
