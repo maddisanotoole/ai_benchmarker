@@ -6,12 +6,30 @@ type ChatMessage = {
   text: string;
 };
 
-const API_URL =
-  import.meta.env.VITE_API_URL ?? "http://localhost:3000/api/ollama/generate";
-const MODEL_NAME = import.meta.env.VITE_OLLAMA_MODEL ?? "llama2";
+type OllamaModel = {
+  name: string;
+  model?: string;
+  modified_at?: string;
+  size?: number;
+  details?: {
+    family?: string;
+    parameter_size?: string;
+    quantization_level?: string;
+  };
+};
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000/api/ollama";
+const API_URL = import.meta.env.VITE_API_URL ?? `${API_BASE_URL}/generate`;
+const MODELS_API_URL =
+  import.meta.env.VITE_MODELS_API_URL ?? `${API_BASE_URL}/models`;
+const DEFAULT_MODEL_NAME = import.meta.env.VITE_OLLAMA_MODEL ?? "llama2";
 
 function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [models, setModels] = useState<OllamaModel[]>([]);
+  const [selectedModel, setSelectedModel] = useState(DEFAULT_MODEL_NAME);
+  const [modelsLoading, setModelsLoading] = useState(true);
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -25,6 +43,46 @@ function App() {
       block: "nearest",
     });
   }, [messages]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadModels() {
+      setModelsLoading(true);
+      try {
+        const response = await fetch(MODELS_API_URL);
+        if (!response.ok) {
+          const payload = await response.text();
+          throw new Error(payload || `Server returned ${response.status}`);
+        }
+
+        const payload = (await response.json()) as { models?: OllamaModel[] };
+        const availableModels = payload.models ?? [];
+        if (!active) return;
+
+        setModels(availableModels);
+        if (
+          availableModels.length > 0 &&
+          !availableModels.some((model) => model.name === selectedModel)
+        ) {
+          setSelectedModel(availableModels[0].name);
+        }
+      } catch (err) {
+        if (!active) return;
+        const message =
+          err instanceof Error ? err.message : "Failed to load models";
+        setError(message);
+      } finally {
+        if (active) setModelsLoading(false);
+      }
+    }
+
+    loadModels();
+
+    return () => {
+      active = false;
+    };
+  }, [selectedModel]);
 
   const appendAssistantText = (chunk: string) => {
     setMessages((prev) => {
@@ -78,11 +136,11 @@ function App() {
     abortControllerRef.current = controller;
 
     const payload = {
-      model: MODEL_NAME,
+      model: selectedModel,
       prompt: trimmed,
       stream: true,
     };
-    console.debug("Chat request", { API_URL, MODEL_NAME, payload });
+    console.debug("Chat request", { API_URL, selectedModel, payload });
 
     try {
       const response = await fetch(API_URL, {
@@ -164,7 +222,26 @@ function App() {
           </div>
           <div className="status">
             {loading ? "Streaming response..." : "Ready to chat"}{" "}
-            <div className="model-label">Model: {MODEL_NAME}</div>{" "}
+            <label className="model-picker">
+              <span>Model</span>
+              <select
+                value={selectedModel}
+                onChange={(event) => setSelectedModel(event.target.value)}
+                disabled={loading || modelsLoading || models.length === 0}
+              >
+                {models.length === 0 ? (
+                  <option value={selectedModel}>
+                    {modelsLoading ? "Loading models..." : selectedModel}
+                  </option>
+                ) : (
+                  models.map((model) => (
+                    <option key={model.name} value={model.name}>
+                      {model.name}
+                    </option>
+                  ))
+                )}
+              </select>
+            </label>
           </div>
         </header>
 

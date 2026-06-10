@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^9.0.0",
+    "ai-benchmarker": "file:..",
     "dotenv": "^16.3.1",
     "fastify": "^4.28.0",
     "ollama": "^0.6.3",

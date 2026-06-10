@@ -35,6 +35,37 @@ function copyUpstreamHeaders(
 }
 
 export default async function (fastify: FastifyInstance) {
+  fastify.get("/models", async (_req, reply) => {
+    const target = process.env.OLLAMA_URL || "http://localhost:11434";
+    const url = `${target}/api/tags`;
+
+    fastify.log.info({ url }, "fetching local ollama models");
+
+    try {
+      const { statusCode, headers, body } = await request(url, {
+        method: "GET",
+        headers: { "content-type": "application/json" },
+      });
+
+      const responseText = await streamToString(body as NodeJS.ReadableStream);
+      reply.status(statusCode);
+      copyUpstreamHeaders(reply, headers);
+
+      if (statusCode >= 400) {
+        fastify.log.error(
+          { statusCode, responseText },
+          "failed to fetch local ollama models",
+        );
+        return reply.send(responseText);
+      }
+
+      return reply.send(JSON.parse(responseText));
+    } catch (err) {
+      fastify.log.error({ err, url }, "error fetching local ollama models");
+      return reply.status(502).send({ error: "Failed to fetch Ollama models" });
+    }
+  });
+
   fastify.post("/generate", async (req, reply) => {
     const target = process.env.OLLAMA_URL || "http://localhost:11434";
     const url = `${target}/api/generate`;

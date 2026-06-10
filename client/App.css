@@ -55,9 +55,28 @@
   gap: 6px;
 }
 
-.model-label {
+.model-picker {
+  display: grid;
+  gap: 6px;
   color: #cbd5e1;
   font-size: 0.85rem;
+}
+
+.model-picker select {
+  min-width: 220px;
+  max-width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: rgba(15, 23, 42, 0.95);
+  color: #f8fafc;
+  font: inherit;
+}
+
+.model-picker select:focus {
+  outline: none;
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
 }
 
 .chat-window {
