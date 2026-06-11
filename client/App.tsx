@@ -34,6 +34,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const messageEndRef = useRef<HTMLDivElement | null>(null);
+  const promptRef = useRef<HTMLTextAreaElement | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const streamBufferRef = useRef("");
 
@@ -130,6 +131,9 @@ function App() {
       { role: "assistant", text: "" },
     ]);
     setPrompt("");
+    if (promptRef.current) {
+      promptRef.current.style.height = "auto";
+    }
     setLoading(true);
 
     const controller = new AbortController();
@@ -212,6 +216,26 @@ function App() {
     setLoading(false);
   };
 
+  const resizePromptInput = (element: HTMLTextAreaElement) => {
+    element.style.height = "auto";
+    element.style.height = `${element.scrollHeight}px`;
+  };
+
+  const handlePromptChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setPrompt(event.target.value);
+    resizePromptInput(event.target);
+  };
+
+  const handlePromptKeyDown = (
+    event: React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
+    if (event.key !== "Enter" || event.shiftKey) return;
+    event.preventDefault();
+    event.currentTarget.form?.requestSubmit();
+  };
+
   return (
     <main className="chat-app">
       <section className="chat-panel">
@@ -272,10 +296,12 @@ function App() {
           </label>
           <textarea
             id="prompt"
+            ref={promptRef}
             value={prompt}
-            onChange={(event) => setPrompt(event.target.value)}
+            onChange={handlePromptChange}
+            onKeyDown={handlePromptKeyDown}
             placeholder="Ask a question or send a prompt..."
-            rows={3}
+            rows={1}
             disabled={loading}
           />
           <div className="form-actions">
