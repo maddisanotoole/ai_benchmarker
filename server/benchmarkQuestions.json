@@ -1,0 +1,22 @@
+[
+  {
+    "id": "reasoning-proof",
+    "title": "Rigorous proof",
+    "prompt": "Prove or disprove: for every positive integer n, there exists a multiple of n whose decimal representation uses only the digits 0 and 1. Give a rigorous proof and examples for n = 7, 13, 37, and 999."
+  },
+  {
+    "id": "coding-debug",
+    "title": "Code debugging",
+    "prompt": "A React component fetches data in useEffect and sometimes renders stale results after the user changes filters quickly. Explain the likely race condition, then provide a robust TypeScript implementation that cancels or ignores stale requests."
+  },
+  {
+    "id": "planning-synthesis",
+    "title": "Planning synthesis",
+    "prompt": "Design a local-first benchmarking app for comparing LLMs. Include data schema, UI states, retry behavior, result aggregation, and how to avoid biased measurements. Be concrete and structured."
+  },
+  {
+    "id": "math-search",
+    "title": "Constrained math",
+    "prompt": "Find all integer triples (a, b, c) with 1 <= a, b, c <= 500 such that a^3 + b^3 = c^3 + 42. Show your reasoning and explain how you checked the search space."
+  }
+]

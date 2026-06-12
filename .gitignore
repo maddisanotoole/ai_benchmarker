@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 client/App.css
 server/.env
+server/data/*.sqlite*

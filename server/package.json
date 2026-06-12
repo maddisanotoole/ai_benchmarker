@@ -11,12 +11,14 @@
   "dependencies": {
     "@fastify/cors": "^9.0.0",
     "ai-benchmarker": "file:..",
+    "better-sqlite3": "^12.10.0",
     "dotenv": "^16.3.1",
     "fastify": "^4.28.0",
     "ollama": "^0.6.3",
     "undici": "^6.2.0"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20.19.42",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"

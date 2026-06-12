@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "@fastify/cors";
 import { request } from "undici";
 import ollamaRoutes from "./ollamaProxy.js";
+import benchmarkRoutes from "./benchmarkRoutes.js";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.register(cors, {
 });
 
 app.register(ollamaRoutes, { prefix: "/api/ollama" });
+app.register(benchmarkRoutes, { prefix: "/api/benchmarks" });
 
 const port = Number(process.env.PORT) || 8000;
 const ollamaBase = process.env.OLLAMA_URL || "http://localhost:11434";
