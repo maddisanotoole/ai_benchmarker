@@ -1,4 +1,4 @@
-# AI Benchmarker
+# AI Model Benchmarker
 
 A local AI chat and benchmarking app for Ollama models.
 
