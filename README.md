@@ -7,6 +7,16 @@ The project has two parts:
 - `client/` - React + Vite web app with Chat and Benchmarks tabs.
 - `server/` - Fastify API that proxies Ollama requests and stores benchmark runs in SQLite.
 
+## Overview
+
+### Benchmarking
+Evaluate model performance on your machine
+<img width="1909" height="894" alt="image" src="https://github.com/user-attachments/assets/e698f9b5-c66f-45c4-a2f4-c65945d2b387" />
+
+### AI Chat
+Chat with any of your installed Ollama models
+<img width="1919" height="849" alt="image" src="https://github.com/user-attachments/assets/2c54e4f8-c9a7-4524-bb72-fb1f29e6bcb1" />
+
 ## Prerequisites
 
 - Node.js and npm
